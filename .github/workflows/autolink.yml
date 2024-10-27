@@ -1,7 +1,7 @@
 name: Autolinks to Jira
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened]
 env:
   JIRA_KEY_PREFIX: "DNT"
 jobs:
