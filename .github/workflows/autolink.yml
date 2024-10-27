@@ -1,22 +1,26 @@
 name: Autolinks to Jira
 on:
   pull_request:
-    types: [opened, assigned]
+    types: [opened, synchronize, reopened]
 env:
-  JIRA_KEY: 'DNT'
+  JIRA_KEY_PREFIX: "DNT"
 jobs:
   link:
     name: Link jira issue
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - name: Get Jira Key
-        id: jira_key
-        run: echo $(git show -s --format=%s) | grep -o '$JIRA_KEY-[0-9]\+' >> "$GITHUB_OUTPUT"
+        id: get-jira-key
+        run: |
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          JIRA_KEY=$(echo "$BRANCH_NAME" | grep -o "${{ env.JIRA_KEY_PREFIX }}-[0-9]\+")
+          echo "jira-key=$JIRA_KEY" >> $GITHUB_OUTPUT
       - name: Comment Jira Link
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: |
-            https://somesandwich.atlassian.net/browse/${{ steps.jira_key.outputs }}
+          message: 'https://somesandwich.atlassian.net/browse/${{ steps.get-jira-key.outputs.jira-key }}'
