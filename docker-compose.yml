@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  somesandwich.donut.authenticate:
+    image: ${DOCKER_REGISTRY-}somesandwichdonutauthenticate
+    build:
+      context: .
+      dockerfile: src/SomeSandwich.Donut.Authenticate/Dockerfile
