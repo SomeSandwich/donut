@@ -1,4 +1,4 @@
-namespace SomeSandwich.Donut.Authenticate;
+namespace SomeSandwich.Donut.Identity;
 
 public class WeatherForecast
 {

@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  somesandwich.donut.authenticate:
-    image: ${DOCKER_REGISTRY-}somesandwichdonutauthenticate
+  somesandwich.donut.identity:
+    image: ${DOCKER_REGISTRY-}somesandwichdonutidentity
     build:
       context: .
-      dockerfile: src/SomeSandwich.Donut.Authenticate/Dockerfile
+      dockerfile: src/SomeSandwich.Donut.Identity/Dockerfile
