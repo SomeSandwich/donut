@@ -6,3 +6,10 @@ services:
     build:
       context: .
       dockerfile: src/SomeSandwich.Donut.Identity/Dockerfile
+
+  somesandwich.donut.link:
+    image: ${DOCKER_REGISTRY-}somesandwichdonutlink
+    build:
+      context: .
+      dockerfile: src/SomeSandwich.Donut.Link/Dockerfile
+

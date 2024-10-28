@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{57FD9132-FF0
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{69739A7B-A9F8-4DBB-B749-9A82932D08DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeSandwich.Donut.Identity", "src\SomeSandwich.Donut.Identity\SomeSandwich.Donut.Identity.csproj", "{B999D0E3-5A98-438A-BEA1-5ED08278F7B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SomeSandwich.Donut.Identity", "src\SomeSandwich.Donut.Identity\SomeSandwich.Donut.Identity.csproj", "{B999D0E3-5A98-438A-BEA1-5ED08278F7B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeSandwich.Donut.Link", "src\SomeSandwich.Donut.Link\SomeSandwich.Donut.Link.csproj", "{3A62091D-D254-43E6-AC5C-95AC2574A090}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +31,17 @@ Global
 		{B999D0E3-5A98-438A-BEA1-5ED08278F7B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B999D0E3-5A98-438A-BEA1-5ED08278F7B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B999D0E3-5A98-438A-BEA1-5ED08278F7B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A62091D-D254-43E6-AC5C-95AC2574A090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A62091D-D254-43E6-AC5C-95AC2574A090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A62091D-D254-43E6-AC5C-95AC2574A090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A62091D-D254-43E6-AC5C-95AC2574A090}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B999D0E3-5A98-438A-BEA1-5ED08278F7B2} = {57FD9132-FF02-4DB5-84D0-207D91871319}
+		{3A62091D-D254-43E6-AC5C-95AC2574A090} = {57FD9132-FF02-4DB5-84D0-207D91871319}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {06D01C50-F7B0-4FC4-9E69-383359EBA63C}

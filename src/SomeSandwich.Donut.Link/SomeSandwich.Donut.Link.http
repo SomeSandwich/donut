@@ -1,0 +1,6 @@
+@SomeSandwich.Donut.Link_HostAddress = http://localhost:5042
+
+GET {{SomeSandwich.Donut.Link_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
