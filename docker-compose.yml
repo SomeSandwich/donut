@@ -1,15 +1,16 @@
 version: '3.4'
 
 services:
-  somesandwich.donut.identity:
-    image: ${DOCKER_REGISTRY-}somesandwichdonutidentity
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identityapi
     build:
       context: .
-      dockerfile: src/SomeSandwich.Donut.Identity/Dockerfile
+      dockerfile: src/Services/Identity/Identity.API/Dockerfile
 
-  somesandwich.donut.link:
-    image: ${DOCKER_REGISTRY-}somesandwichdonutlink
+
+  link.api:
+    image: ${DOCKER_REGISTRY-}linkapi
     build:
       context: .
-      dockerfile: src/SomeSandwich.Donut.Link/Dockerfile
+      dockerfile: src/Services/Link/Link.API/Dockerfile
 
