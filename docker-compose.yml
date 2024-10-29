@@ -1,11 +1,28 @@
 version: '3.4'
 
 services:
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    build:
+      context: .
+      dockerfile: src/Gateways/Gateway.API/Dockerfile
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    networks:
+      - donut-network
+
+
   identity.api:
     image: ${DOCKER_REGISTRY-}identityapi
     build:
       context: .
       dockerfile: src/Services/Identity/Identity.API/Dockerfile
+    ports:
+      - "5100:8080"
+      - "5101:8081"
+    networks:
+      - donut-network
 
 
   link.api:
@@ -13,4 +30,13 @@ services:
     build:
       context: .
       dockerfile: src/Services/Link/Link.API/Dockerfile
+    ports:
+      - "5200:8080"
+      - "5201:8081"
+    networks:
+      - donut-network
 
+networks:
+  donut-network:
+    name: donut-network
+    driver: bridge

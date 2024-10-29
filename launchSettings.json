@@ -7,7 +7,8 @@
         "somesandwich.donut.identity": "StartDebugging",
         "somesandwich.donut.link": "StartDebugging",
         "identity.api": "StartDebugging",
-        "link.api": "StartDebugging"
+        "link.api": "StartDebugging",
+        "gateway.api": "StartDebugging"
       }
     }
   }
