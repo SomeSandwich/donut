@@ -1,18 +1,24 @@
+using Link.API.Infrastructure.Startup;
+using Serilog;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Eureka;
 
-namespace SomeSandwich.Donut.Identity;
+namespace Link.API;
 
-public class Program
+internal sealed class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
+        var configuration = builder.Configuration;
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddServiceDiscovery(o => o.UseEureka());
+
+        // Logging.
+        builder.Services.AddSerilog(new SerilogConfiguration(configuration).Setup);
 
         var app = builder.Build();
 
@@ -23,13 +29,8 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-
         app.MapControllers();
-
         app.Run();
     }
 }

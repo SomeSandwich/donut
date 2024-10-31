@@ -4,7 +4,11 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "somesandwich.donut.identity": "StartDebugging"
+        "somesandwich.donut.identity": "StartDebugging",
+        "somesandwich.donut.link": "StartDebugging",
+        "identity.api": "StartDebugging",
+        "link.api": "StartDebugging",
+        "gateway.api": "StartDebugging"
       }
     }
   }
