@@ -8,10 +8,6 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        var configuration = builder.Configuration;
-
-        var instanceId = configuration["Eureka:Instance:InstanceId"];
-        Console.WriteLine($"Eureka InstanceID: {instanceId}");
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
