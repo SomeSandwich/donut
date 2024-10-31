@@ -76,11 +76,6 @@ public sealed class UpdateClusterDestinationService : IHostedService, IDisposabl
             };
         }).ToImmutableArray();
 
-        foreach (var cluster in clusters)
-        {
-            logger.LogInformation("ClusterId {ClusterId}, Destinations {Destinations}", cluster.ClusterId, cluster.Destinations);
-        }
-
         var memoryProvider = services.GetRequiredService<InMemoryConfigProvider>();
         memoryProvider.Update(YarpRoutes.Routes, clusters);
     }
