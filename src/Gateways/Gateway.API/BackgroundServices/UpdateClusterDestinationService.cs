@@ -60,24 +60,37 @@ public sealed class UpdateClusterDestinationService : IHostedService, IDisposabl
         logger.LogInformation("Update Cluster Destination Service is working. Count: {Count}", count);
 
         var apps = client.Applications.GetRegisteredApplications();
-        var cluster = apps.Select(e =>
+        if (apps.Count == 0)
+        {
+            return;
+        }
+
+        var clusters = apps.Select(e =>
         {
             return new ClusterConfig
             {
-                ClusterId = $"{e.Name}-cluster",
+                ClusterId = e.Name,
                 Destinations = e.Instances
                     .Select(MapDestinationFromInstance)
                     .ToDictionary(valueTuple => valueTuple.InstanceId, i => i.DestinationConfig)
             };
         }).ToImmutableArray();
 
+        foreach (var cluster in clusters)
+        {
+            logger.LogInformation("ClusterId {ClusterId}, Destinations {Destinations}", cluster.ClusterId, cluster.Destinations);
+        }
+
         var memoryProvider = services.GetRequiredService<InMemoryConfigProvider>();
-        memoryProvider.Update(YarpRoutes.Routes, cluster);
+        memoryProvider.Update(YarpRoutes.Routes, clusters);
     }
 
     private static (string InstanceId, DestinationConfig DestinationConfig) MapDestinationFromInstance(InstanceInfo instance)
     {
-        return (instance.InstanceId, new DestinationConfig { Address = $"http://{instance.HostName}:{instance.Port}" });
+        return (instance.InstanceId, new DestinationConfig
+        {
+            Address = $"http://{instance.HostName}:{instance.Port}"
+        });
     }
 
     #region Disposed

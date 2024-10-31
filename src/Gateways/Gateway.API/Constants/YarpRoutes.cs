@@ -15,7 +15,7 @@ internal static class YarpRoutes
         new()
         {
             RouteId = "identity-route",
-            ClusterId = "identity-cluster",
+            ClusterId = "IDENTITY-CLUSTER",
             Match = new RouteMatch { Path = "identity-api/{**catch-all}" },
             Transforms =
             [
@@ -34,7 +34,7 @@ internal static class YarpRoutes
     [
         new()
         {
-            ClusterId = "identity-cluster",
+            ClusterId = "IDENTITY-CLUSTER",
             Destinations = new Dictionary<string, DestinationConfig>
             {
                 { "identity-api-destination-1", new DestinationConfig { Address = "http://identity.api:8080" } }
