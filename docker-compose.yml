@@ -6,9 +6,13 @@ services:
     build:
       context: .
       dockerfile: src/Gateways/Gateway.API/Dockerfile
+    networks:
+      - donut-network
+
+  eureka:
+    image: steeltoeoss/eureka-server
     ports:
-      - "5000:8080"
-      - "5001:8081"
+      - "8761:8761"
     networks:
       - donut-network
 
@@ -18,9 +22,6 @@ services:
     build:
       context: .
       dockerfile: src/Services/Identity/Identity.API/Dockerfile
-    ports:
-      - "5100:8080"
-      - "5101:8081"
     networks:
       - donut-network
 
@@ -30,9 +31,6 @@ services:
     build:
       context: .
       dockerfile: src/Services/Link/Link.API/Dockerfile
-    ports:
-      - "5200:8080"
-      - "5201:8081"
     networks:
       - donut-network
 

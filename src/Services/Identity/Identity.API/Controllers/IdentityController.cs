@@ -42,6 +42,6 @@ public class IdentityController : ControllerBase
         /// <summary>
         /// Gets or sets the identity value.
         /// </summary>
-        public string Identity { get; set; }
+        required public string Identity { get; set; }
     }
 }

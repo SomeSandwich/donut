@@ -1,3 +1,6 @@
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Eureka;
+
 namespace Link.API;
 
 internal sealed class Program
@@ -11,6 +14,8 @@ internal sealed class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddServiceDiscovery(o => o.UseEureka());
 
         var app = builder.Build();
 

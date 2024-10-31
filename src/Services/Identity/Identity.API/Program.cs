@@ -1,3 +1,6 @@
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Eureka;
+
 namespace Identity.API;
 
 internal sealed class Program
@@ -5,10 +8,15 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var configuration = builder.Configuration;
+
+        var instanceId = configuration["Eureka:Instance:InstanceId"];
+        Console.WriteLine($"Eureka InstanceID: {instanceId}");
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddServiceDiscovery(s => s.UseEureka());
 
         var app = builder.Build();
 

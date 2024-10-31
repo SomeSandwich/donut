@@ -39,6 +39,6 @@ public class LinkController : ControllerBase
         /// <summary>
         /// Gets or sets the link.
         /// </summary>
-        public string Link { get; set; }
+        required public string Link { get; set; }
     }
 }
