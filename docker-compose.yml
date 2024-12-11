@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+
+  dapr-dashboard:
+    image: "daprio/dashboard:latest"
+
+  zipkin:
+    image: openzipkin/zipkin-slim:latest
+
+  identity-api:
+    image: ${REGISTRY:-donut}/identity.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/SomeSandwich.Donut.Identity/Dockerfile
+
+  identity-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:identity-api"
+    depends_on:
+      - identity-api

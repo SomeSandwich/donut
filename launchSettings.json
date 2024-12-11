@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "identity-api": "StartDebugging",
+        "identity-api-dapr": "StartWithoutDebugging",
+        "dapr-dashboard": "StartWithoutDebugging",
+        "zipkin": "StartWithoutDebugging"
+      }
+    }
+  }
+}
