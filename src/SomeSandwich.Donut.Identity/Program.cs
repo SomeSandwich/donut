@@ -1,7 +1,8 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Scalar.AspNetCore;
 using SomeSandwich.Donut.Identity.Infrastructure.Extensions;
 using SomeSandwich.Donut.Identity.Infrastructure.Startup;
+using SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
 
 namespace SomeSandwich.Donut.Identity;
 
