@@ -2,11 +2,17 @@ version: '3.9'
 
 services:
 
-  dapr-dashboard:
-    image: "daprio/dashboard:latest"
+  postgres:
+    image: postgres:latest
 
   zipkin:
     image: openzipkin/zipkin-slim:latest
+
+  dapr-dashboard:
+    image: daprio/dashboard:latest
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
 
   identity-api:
     image: ${REGISTRY:-donut}/identity.api:${TAG:-latest}

@@ -2,6 +2,19 @@ version: '3.9'
 
 services:
 
+  postgres:
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    ports:
+      - "5301:5432"
+    volumes:
+      - donut-sqldata:/var/lib/postgresql/data
+
+  zipkin:
+    ports:
+      - "5401:9411"
+
   dapr-dashboard:
     command: ["--docker-compose=true",
       "--components-path=/components",
@@ -9,15 +22,25 @@ services:
       "--docker-compose-path=/docker-compose.yml"
       ]
     ports:
-      - "8080:8080"
+      - "5402:8080"
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
       - "./docker-compose.yml/:/docker-compose.yml"
 
-  zipkin:
+  keycloak:
+    command: "start-dev --import-realm"
+    environment:
+      - "KC_BOOTSTRAP_ADMIN_USERNAME=admin"
+      - "KC_BOOTSTRAP_ADMIN_PASSWORD=admin"
+      - "KC_DB=postgres"
+      - "KC_DB_URL=jdbc:postgresql://postgres:5432/"
+      - "KC_DB_USERNAME=admin"
+      - "KC_DB_PASSWORD=admin"
     ports:
-      - "5411:9411"
+      - "5501:8080"
+    volumes:
+      - "./keycloak/somesandwich-donut-realm.json:/opt/keycloak/data/import/somesandwich-donut-realm.json"
 
   identity-api:
     environment:
@@ -38,3 +61,7 @@ services:
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
+
+volumes:
+  donut-sqldata:
+    external: false
