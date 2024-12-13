@@ -1,37 +1,41 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// Provides methods to configure OpenAPI options.
 /// </summary>
 public class OpenApiOptionSetup
 {
+    private readonly Func<OpenApiDocument, OpenApiDocumentTransformerContext, CancellationToken, Task>? apiInformation;
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    public OpenApiOptionSetup()
+    {
+    }
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="apiInformation">A function to set up the OpenAPI document.</param>
+    public OpenApiOptionSetup(Func<OpenApiDocument, OpenApiDocumentTransformerContext, CancellationToken, Task> apiInformation)
+    {
+        this.apiInformation = apiInformation;
+    }
+
     /// <summary>
     /// Configures the OpenAPI options by adding a document transformer.
     /// </summary>
     /// <param name="options">The OpenAPI options to configure.</param>
     public void Setup(OpenApiOptions options)
     {
-        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        if (apiInformation is not null)
         {
-            document.Info.Title = "SomeSandwich Donut - Identity";
-            document.Info.Description = "SomeSandwich Donut Identity API";
-            document.Info.Version = "v1";
-
-            document.Info.Contact = new OpenApiContact
-            {
-                Name = "Hieu Nguyen",
-                Url = new Uri("https://github.com/SomeSandwich/donut")
-            };
-
-            document.Components ??= new OpenApiComponents();
-
-            document.Servers = new List<OpenApiServer> { new() { Url = "http://localhost:5101" } };
-
-            return Task.CompletedTask;
-        });
+            options.AddDocumentTransformer(apiInformation);
+        }
 
         // Add a custom schema transformer to add descriptions from XML comments
         var descriptions = new AddSchemaDescriptionsTransformer();

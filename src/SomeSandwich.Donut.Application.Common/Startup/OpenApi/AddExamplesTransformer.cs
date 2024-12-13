@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// A class representing an operation processor that adds examples to API endpoints.

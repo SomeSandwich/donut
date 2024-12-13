@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Any;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// An attribute representing an example for an OpenAPI operation or schema.

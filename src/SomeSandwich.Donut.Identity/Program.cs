@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
-using SomeSandwich.Donut.Identity.Infrastructure.Extensions;
-using SomeSandwich.Donut.Identity.Infrastructure.Startup;
-using SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+using SomeSandwich.Donut.Application.Common.Extensions;
+using SomeSandwich.Donut.Application.Common.Startup;
+using SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 namespace SomeSandwich.Donut.Identity;
 
@@ -21,7 +23,7 @@ public static class Program
 
         builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
         builder.Services.AddAuthorization();
-        builder.Services.AddOpenApi(new OpenApiOptionSetup().Setup);
+        builder.Services.AddOpenApi(new OpenApiOptionSetup(AddApiDocumentInformation).Setup);
 
         var app = builder.Build();
 
@@ -36,5 +38,20 @@ public static class Program
         app.UseAuthorization();
 
         app.Run();
+    }
+
+    private static Task AddApiDocumentInformation(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
+    {
+        document.Info.Title = "SomeSandwich Donut - Identity";
+        document.Info.Description = "SomeSandwich Donut Identity API";
+        document.Info.Version = "v1";
+
+        document.Info.Contact = new OpenApiContact { Name = "SomeSandwich", Url = new Uri("https://github.com/SomeSandwich/donut") };
+
+        document.Components ??= new OpenApiComponents();
+
+        document.Servers = [new OpenApiServer { Url = "http://localhost:5101" }];
+
+        return Task.CompletedTask;
     }
 }

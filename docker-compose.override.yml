@@ -40,7 +40,7 @@ services:
     ports:
       - "5501:8080"
     volumes:
-      - "./keycloak/somesandwich-donut-realm.json:/opt/keycloak/data/import/somesandwich-donut-realm.json"
+      - "./docker/keycloak/somesandwich-donut-realm.json:/opt/keycloak/data/import/somesandwich-donut-realm.json"
 
   identity-api:
     environment:

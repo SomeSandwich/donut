@@ -1,6 +1,6 @@
 ﻿using Scalar.AspNetCore;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup;
+namespace SomeSandwich.Donut.Application.Common.Startup;
 
 /// <summary>
 /// Provides setup configuration for Scalar options.

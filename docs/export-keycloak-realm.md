@@ -15,7 +15,7 @@ docker network ls
 docker run --rm \
     --name keycloak_exporter \
     --network {{ enter the network on docker compose }} \
-    -v ./keycloak/:/tmp/keycloak-export \
+    -v ./docker/keycloak/:/tmp/keycloak-export \
     -e KC_DB=postgres \
     -e KC_DB_PASSWORD=admin \
     -e KC_DB_USERNAME=admin \

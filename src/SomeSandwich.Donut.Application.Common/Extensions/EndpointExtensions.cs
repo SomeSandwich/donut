@@ -1,8 +1,11 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using SomeSandwich.Donut.Identity.Endpoints;
+using SomeSandwich.Donut.Application.Common.Interfaces;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Extensions;
+namespace SomeSandwich.Donut.Application.Common.Extensions;
 
 /// <summary>
 /// Extension methods for adding and mapping endpoints.

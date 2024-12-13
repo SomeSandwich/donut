@@ -1,4 +1,6 @@
-﻿namespace SomeSandwich.Donut.Identity.Endpoints.Weathers;
+﻿using SomeSandwich.Donut.Application.Common.Interfaces;
+
+namespace SomeSandwich.Donut.Identity.Endpoints.Weathers;
 
 /// <summary>
 /// Endpoint for searching weather forecasts.
@@ -25,7 +27,8 @@ public class SearchWeathers : IEndpoint
                 .ToArray();
             return forecast;
         })
+        .WithTags(EndpointTagConstants.Weathers)
         .WithSummary("Search Weathers")
-        .WithTags(EndpointTagConstants.Weathers);
+        .Produces<WeatherForecast[]>();
     }
 }

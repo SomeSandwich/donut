@@ -1,4 +1,4 @@
-﻿namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+﻿namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// Defines a method for obtaining examples for OpenAPI documentation.

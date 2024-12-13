@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace SomeSandwich.Donut.Identity;
+namespace SomeSandwich.Donut.Application.Common;
 
 /// <summary>
 /// A class that provides metadata for (de)serializing JSON for both the API endpoints and with OpenAPI.
@@ -14,4 +14,4 @@ namespace SomeSandwich.Donut.Identity;
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     WriteIndented = true)]
-public sealed partial class IdentityJsonSerializerContext : JsonSerializerContext;
+public sealed partial class OpenApiJsonSerializerContext : JsonSerializerContext;

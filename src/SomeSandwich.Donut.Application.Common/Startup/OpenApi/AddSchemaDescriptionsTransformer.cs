@@ -6,26 +6,27 @@ using System.Xml.XPath;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// An OpenAPI schema transformer that adds descriptions from XML documentation.
 /// </summary>
 /// <remarks>
-/// https://github.com/martincostello/aspnetcore-openapi/blob/b83950a73cf15a142d186d6b5479540db099973c/src/TodoApp/OpenApi/AspNetCore/AddSchemaDescriptionsTransformer.cs
+/// https://github.com/martincostello/aspnetcore-openapi/blob/main/src/TodoApp/OpenApi/AspNetCore/AddSchemaDescriptionsTransformer.cs
 /// </remarks>
 public class AddSchemaDescriptionsTransformer : IOpenApiSchemaTransformer
 {
-    private static readonly Assembly ThisAssembly = typeof(AddSchemaDescriptionsTransformer).Assembly;
-    private readonly ConcurrentDictionary<string, string?> _descriptions = [];
-    private XPathNavigator? _navigator;
+    private static readonly Assembly[] Assemblies = [Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly(), typeof(AddSchemaDescriptionsTransformer).Assembly];
+    private readonly ConcurrentDictionary<string, string?> descriptions = [];
+    private readonly ConcurrentDictionary<Assembly, XPathNavigator> navigators = [];
 
+    /// <inheritdoc />
     public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
         // Assign a description from the XML documentation from either the type or the property associated with the schema
         if (schema.Description is null &&
             GetMemberName(context.JsonTypeInfo, context.JsonPropertyInfo) is { Length: > 0 } memberName &&
-            GetDescription(memberName) is { Length: > 0 } description)
+            GetDescription(context.JsonPropertyInfo?.DeclaringType.Assembly ?? context.JsonTypeInfo.Type.Assembly, memberName) is { Length: > 0 } description)
         {
             schema.Description = description;
         }
@@ -33,15 +34,15 @@ public class AddSchemaDescriptionsTransformer : IOpenApiSchemaTransformer
         return Task.CompletedTask;
     }
 
-    private string? GetDescription(string memberName)
+    private string? GetDescription(Assembly assembly, string memberName)
     {
-        if (_descriptions.TryGetValue(memberName, out var description))
+        if (descriptions.TryGetValue(memberName, out var description))
         {
             return description;
         }
 
         // Try to find the summary text for the member from the XML documentation file
-        var navigator = CreateNavigator();
+        var navigator = CreateNavigator(assembly);
         var node = navigator.SelectSingleNode($"/doc/members/member[@name='{memberName}']/summary");
 
         if (node is not null)
@@ -50,15 +51,15 @@ public class AddSchemaDescriptionsTransformer : IOpenApiSchemaTransformer
         }
 
         // Cache the description for this member
-        _descriptions[memberName] = description;
+        descriptions[memberName] = description;
 
         return description;
     }
 
     private static string? GetMemberName(JsonTypeInfo typeInfo, JsonPropertyInfo? propertyInfo)
     {
-        if (typeInfo.Type.Assembly != ThisAssembly &&
-            propertyInfo?.DeclaringType.Assembly != ThisAssembly)
+        if (!Assemblies.Contains(typeInfo.Type.Assembly) &&
+            !Assemblies.Contains(propertyInfo?.DeclaringType.Assembly))
         {
             // The type or member's type is not from this assembly (e.g. from the framework itself)
             return null;
@@ -84,17 +85,21 @@ public class AddSchemaDescriptionsTransformer : IOpenApiSchemaTransformer
         }
     }
 
-    private XPathNavigator CreateNavigator()
+    private XPathNavigator CreateNavigator(Assembly assembly)
     {
-        if (_navigator is null)
+        if (navigators.TryGetValue(assembly, out var navigator))
         {
-            // Find the .xml documentation file associated with this assembly.
-            // It should be in the application's directory next to the .dll file.
-            var path = Path.Combine(AppContext.BaseDirectory, $"{ThisAssembly.GetName().Name}.xml");
-            using var reader = XmlReader.Create(path);
-            _navigator = new XPathDocument(reader).CreateNavigator();
+            return navigator;
         }
 
-        return _navigator;
+        // Find the .xml documentation file associated with this assembly.
+        // It should be in the application's directory next to the .dll file.
+        var path = Path.Combine(AppContext.BaseDirectory, $"{assembly.GetName().Name}.xml");
+        using var reader = XmlReader.Create(path);
+        navigator = new XPathDocument(reader).CreateNavigator();
+
+        navigators[assembly] = navigator;
+
+        return navigator;
     }
 }

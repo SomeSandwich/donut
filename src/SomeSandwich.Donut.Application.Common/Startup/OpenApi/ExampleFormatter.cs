@@ -1,14 +1,23 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Any;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// A class containing methods to help format JSON examples for OpenAPI.
 /// </summary>
 internal static class ExampleFormatter
 {
+    private static JsonSerializerOptions jsonSerializerOptions = new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true
+    };
+
     /// <summary>
     /// Formats the example for the specified type.
     /// </summary>
@@ -34,7 +43,15 @@ internal static class ExampleFormatter
     public static IOpenApiAny AsJson<T>(T example, JsonSerializerContext context)
     {
         // Apply any formatting rules configured for the API (e.g. camel casing)
-        var json = JsonSerializer.Serialize(example, typeof(T), context);
+        string json;
+        if (typeof(T) == typeof(Guid) || typeof(T) == typeof(JsonObject) || typeof(T) == typeof(ProblemDetails))
+        {
+            json = JsonSerializer.Serialize(example, typeof(T), context);
+        }
+        else
+        {
+            json = JsonSerializer.Serialize(example, jsonSerializerOptions);
+        }
         using var document = JsonDocument.Parse(json);
 
         if (document.RootElement.ValueKind == JsonValueKind.String)

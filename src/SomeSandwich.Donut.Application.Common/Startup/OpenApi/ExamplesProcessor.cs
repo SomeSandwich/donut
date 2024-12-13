@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.OpenApi.Models;
 
-namespace SomeSandwich.Donut.Identity.Infrastructure.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
 /// <summary>
 /// A class representing a processor that can add examples to OpenAPI operations and schemas.
 /// </summary>
 public abstract class ExamplesProcessor
 {
-    private static readonly IdentityJsonSerializerContext Context = IdentityJsonSerializerContext.Default;
+    private static readonly OpenApiJsonSerializerContext Context = OpenApiJsonSerializerContext.Default;
 
     protected void Process(OpenApiOperation operation, ApiDescription description)
     {

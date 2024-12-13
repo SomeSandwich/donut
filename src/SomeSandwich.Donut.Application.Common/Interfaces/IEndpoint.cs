@@ -1,4 +1,6 @@
-﻿namespace SomeSandwich.Donut.Identity.Endpoints;
+﻿using Microsoft.AspNetCore.Routing;
+
+namespace SomeSandwich.Donut.Application.Common.Interfaces;
 
 /// <summary>
 /// Defines a contract for mapping an endpoint to an endpoint route builder.
