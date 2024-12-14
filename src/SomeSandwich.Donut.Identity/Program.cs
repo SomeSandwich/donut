@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Dapr.Client;
-using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Startup;
@@ -25,7 +24,7 @@ public static class Program
         var daprClient = new DaprClientBuilder().Build();
 
         // OpenAPI
-        services.Configure<OpenApiOptions>(new OpenApiOptionSetup(configuration).Setup);
+        services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
 
         // Endpoints
         services.AddEndpoints(Assembly.GetExecutingAssembly());

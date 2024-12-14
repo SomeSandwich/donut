@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Dapr.Client;
-using Microsoft.AspNetCore.OpenApi;
 using MongoDB.Driver;
 using Scalar.AspNetCore;
 using SomeSandwich.Donut.Application.Common.Extensions;
@@ -26,13 +25,14 @@ public class Program
         var daprClient = new DaprClientBuilder().Build();
 
         // OpenAPI
-        services.Configure<OpenApiOptions>(new OpenApiOptionSetup(configuration).Setup);
+        services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
 
         // Endpoints
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         // Database
-        var dbConnectionString = (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:LinkDB"))["ConnectionStrings:LinkDB"];
+        var dbConnectionString =
+            (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:LinkDB"))["ConnectionStrings:LinkDB"];
         services.AddSingleton<IMongoClient>(_ => new MongoClient(dbConnectionString));
 
         var app = builder.Build();

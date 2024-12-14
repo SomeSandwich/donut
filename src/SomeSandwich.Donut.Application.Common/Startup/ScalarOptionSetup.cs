@@ -16,6 +16,6 @@ public class ScalarOptionSetup
         options
             .WithDownloadButton(true)
             .WithTheme(ScalarTheme.Alternate)
-            .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Axios);
+            .WithClientButton(false);
     }
 }
