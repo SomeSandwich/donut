@@ -2,8 +2,11 @@ version: '3.9'
 
 services:
 
-  postgres:
+  sqldata:
     image: postgres:latest
+
+  nosqldata:
+    image: mongodb/mongodb-community-server:latest
 
   zipkin:
     image: openzipkin/zipkin-slim:latest
@@ -25,3 +28,15 @@ services:
     network_mode: "service:identity-api"
     depends_on:
       - identity-api
+
+  link-api:
+    image: ${REGISTRY:-donut}/link.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/SomeSandwich.Donut.Link/Dockerfile
+
+  link-api-dapr:
+    image: "daprio/daprd:1.9.4"
+    network_mode: "service:link-api"
+    depends_on:
+      - link-api

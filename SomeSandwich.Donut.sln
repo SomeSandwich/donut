@@ -21,6 +21,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr", "dapr", "{D0F84BEA-27FD-4D6C-9911-0D6887195F91}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{6050A0F0-4B2D-4D1C-BEBD-DAF1F404A4BE}"
+	ProjectSection(SolutionItems) = preProject
+		dapr\components\secrets.json = dapr\components\secrets.json
+		dapr\components\donut-secrets.yaml = dapr\components\donut-secrets.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuation", "configuation", "{46EC1BEE-204F-4BF0-A733-FCC02040033C}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +36,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{CC469977-6985-45DB-B69A-433AF24005EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeSandwich.Donut.Application.Common", "src\SomeSandwich.Donut.Application.Common\SomeSandwich.Donut.Application.Common.csproj", "{565BDC2E-1E3F-4144-A53B-46E0FC35FECE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{117695D1-B8E9-4BA7-81A7-03B60E777142}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeSandwich.Donut.Domain", "..\SomeSandwich.Donut.Domain\SomeSandwich.Donut.Domain.csproj", "{A8D68F19-80EF-465D-8837-50A258A2DA78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +63,10 @@ Global
 		{565BDC2E-1E3F-4144-A53B-46E0FC35FECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{565BDC2E-1E3F-4144-A53B-46E0FC35FECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{565BDC2E-1E3F-4144-A53B-46E0FC35FECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D68F19-80EF-465D-8837-50A258A2DA78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D68F19-80EF-465D-8837-50A258A2DA78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D68F19-80EF-465D-8837-50A258A2DA78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D68F19-80EF-465D-8837-50A258A2DA78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +79,7 @@ Global
 		{67AD357A-391D-4228-AB9D-438279769863} = {0A15F4D0-825F-4A19-BEEA-A62D0DD01010}
 		{CC469977-6985-45DB-B69A-433AF24005EC} = {9D47D470-34A1-4F9D-B086-14403B5B249B}
 		{565BDC2E-1E3F-4144-A53B-46E0FC35FECE} = {CC469977-6985-45DB-B69A-433AF24005EC}
+		{117695D1-B8E9-4BA7-81A7-03B60E777142} = {9D47D470-34A1-4F9D-B086-14403B5B249B}
+		{A8D68F19-80EF-465D-8837-50A258A2DA78} = {117695D1-B8E9-4BA7-81A7-03B60E777142}
 	EndGlobalSection
 EndGlobal

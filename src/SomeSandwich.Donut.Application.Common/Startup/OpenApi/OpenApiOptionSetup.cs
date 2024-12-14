@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
 namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
@@ -8,22 +9,15 @@ namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 /// </summary>
 public class OpenApiOptionSetup
 {
-    private readonly Func<OpenApiDocument, OpenApiDocumentTransformerContext, CancellationToken, Task>? apiInformation;
+    private readonly IConfiguration configuration;
 
     /// <summary>
     /// Constructor.
     /// </summary>
-    public OpenApiOptionSetup()
+    /// <param name="configuration">Configuration settings.</param>
+    public OpenApiOptionSetup(IConfiguration configuration)
     {
-    }
-
-    /// <summary>
-    /// Constructor.
-    /// </summary>
-    /// <param name="apiInformation">A function to set up the OpenAPI document.</param>
-    public OpenApiOptionSetup(Func<OpenApiDocument, OpenApiDocumentTransformerContext, CancellationToken, Task> apiInformation)
-    {
-        this.apiInformation = apiInformation;
+        this.configuration = configuration;
     }
 
     /// <summary>
@@ -32,10 +26,38 @@ public class OpenApiOptionSetup
     /// <param name="options">The OpenAPI options to configure.</param>
     public void Setup(OpenApiOptions options)
     {
-        if (apiInformation is not null)
+        var information = configuration.GetSection("OpenApi").Get<OpenApiInformation>();
+
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
         {
-            options.AddDocumentTransformer(apiInformation);
-        }
+            if (information is not null)
+            {
+                if (information.Title is not null)
+                {
+                    document.Info.Title = information.Title;
+                }
+
+                if (information.Description is not null)
+                {
+                    document.Info.Description = information.Description;
+                }
+
+                if (information.Version is not null)
+                {
+                    document.Info.Version = information.Version;
+                }
+
+                if (information.ServerUrl is not null)
+                {
+                    document.Servers = [new OpenApiServer { Url = information.ServerUrl }];
+                }
+            }
+
+            document.Info.Contact = new OpenApiContact { Name = "SomeSandwich", Url = new Uri("https://github.com/SomeSandwich/donut") };
+            document.Components ??= new OpenApiComponents();
+
+            return Task.CompletedTask;
+        });
 
         // Add a custom schema transformer to add descriptions from XML comments
         var descriptions = new AddSchemaDescriptionsTransformer();

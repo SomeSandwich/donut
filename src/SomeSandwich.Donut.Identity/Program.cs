@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using Dapr.Client;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Startup;
@@ -17,16 +17,22 @@ public static class Program
     /// Entry point method.
     /// </summary>
     /// <param name="args">Program arguments.</param>
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var configuration = builder.Configuration;
+        var services = builder.Services;
+        var daprClient = new DaprClientBuilder().Build();
 
-        builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
-        builder.Services.AddAuthorization();
-        builder.Services.AddOpenApi(new OpenApiOptionSetup(AddApiDocumentInformation).Setup);
+        // OpenAPI
+        services.Configure<OpenApiOptions>(new OpenApiOptionSetup(configuration).Setup);
+
+        // Endpoints
+        services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         var app = builder.Build();
 
+        // Scalar
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -34,24 +40,7 @@ public static class Program
         }
 
         app.MapEndpoints();
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
 
-        app.Run();
-    }
-
-    private static Task AddApiDocumentInformation(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
-    {
-        document.Info.Title = "SomeSandwich Donut - Identity";
-        document.Info.Description = "SomeSandwich Donut Identity API";
-        document.Info.Version = "v1";
-
-        document.Info.Contact = new OpenApiContact { Name = "SomeSandwich", Url = new Uri("https://github.com/SomeSandwich/donut") };
-
-        document.Components ??= new OpenApiComponents();
-
-        document.Servers = [new OpenApiServer { Url = "http://localhost:5101" }];
-
-        return Task.CompletedTask;
+        await app.RunAsync();
     }
 }

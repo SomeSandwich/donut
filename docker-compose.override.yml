@@ -2,14 +2,24 @@ version: '3.9'
 
 services:
 
-  postgres:
+  sqldata:
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
     ports:
       - "5301:5432"
     volumes:
-      - donut-sqldata:/var/lib/postgresql/data
+      - "./docker/postgres/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql"
+      - "donut-sqldata:/var/lib/postgresql/data"
+
+  nosqldata:
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    ports:
+      - "5302:27017"
+    volumes:
+      - "donut-nosqldata:/data/db"
 
   zipkin:
     ports:
@@ -34,7 +44,7 @@ services:
       - "KC_BOOTSTRAP_ADMIN_USERNAME=admin"
       - "KC_BOOTSTRAP_ADMIN_PASSWORD=admin"
       - "KC_DB=postgres"
-      - "KC_DB_URL=jdbc:postgresql://postgres:5432/"
+      - "KC_DB_URL=jdbc:postgresql://sqldata:5432/keycloak"
       - "KC_DB_USERNAME=admin"
       - "KC_DB_PASSWORD=admin"
     ports:
@@ -55,13 +65,34 @@ services:
       "-app-id", "identity-api",
       "-app-port", "80",
       "-placement-host-address", "dapr-placement:50000",
-      "-components-path", "/components",
+      "-components-path", "/components",.
       "-config", "/configuration/donut-config.yaml"
       ]
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
 
+  link-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    ports:
+      - "5102:80"
+      - "50002:50001"
+
+  link-api-dapr:
+    command: ["./daprd",
+      "-app-id", "link-api",
+      "-app-port", "80",
+      "-placement-host-address", "dapr-placement:50000",
+      "-components-path", "/components",
+      "-config", "/configuration/donut-config.yaml"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
 volumes:
   donut-sqldata:
+    external: false
+  donut-nosqldata:
     external: false

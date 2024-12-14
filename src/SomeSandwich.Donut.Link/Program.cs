@@ -1,29 +1,51 @@
-﻿namespace SomeSandwich.Donut.Link;
+﻿using System.Reflection;
+using Dapr.Client;
+using Microsoft.AspNetCore.OpenApi;
+using MongoDB.Driver;
+using Scalar.AspNetCore;
+using SomeSandwich.Donut.Application.Common.Extensions;
+using SomeSandwich.Donut.Application.Common.Startup;
+using SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 
+namespace SomeSandwich.Donut.Link;
+
+/// <summary>
+/// Entry point class.
+/// </summary>
 public class Program
 {
-    public static void Main(string[] args)
+    /// <summary>
+    /// Entry point method.
+    /// </summary>
+    /// <param name="args">Program arguments.</param>
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var configuration = builder.Configuration;
+        var services = builder.Services;
+        var daprClient = new DaprClientBuilder().Build();
 
-        // Add services to the container.
-        builder.Services.AddAuthorization();
+        // OpenAPI
+        services.Configure<OpenApiOptions>(new OpenApiOptionSetup(configuration).Setup);
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        // Endpoints
+        services.AddEndpoints(Assembly.GetExecutingAssembly());
+
+        // Database
+        var dbConnectionString = (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:LinkDB"))["ConnectionStrings:LinkDB"];
+        services.AddSingleton<IMongoClient>(_ => new MongoClient(dbConnectionString));
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Scalar
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference(new ScalarOptionSetup().Setup);
         }
 
-        app.UseHttpsRedirection();
+        app.MapEndpoints();
 
-        app.UseAuthorization();
-
-        app.Run();
+        await app.RunAsync();
     }
 }
