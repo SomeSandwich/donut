@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Dapr.Client;
 using Scalar.AspNetCore;
+using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Startup;
 using SomeSandwich.Donut.Application.Common.Startup.OpenApi;
@@ -23,20 +24,26 @@ public static class Program
         var services = builder.Services;
         var daprClient = new DaprClientBuilder().Build();
 
-        // OpenAPI
+        // OpenAPI.
         services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
 
-        // Endpoints
+        // Endpoints.
         services.AddEndpoints(Assembly.GetExecutingAssembly());
+
+        // Logging.
+        services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
 
         var app = builder.Build();
 
-        // Scalar
+        // Scalar.
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
             app.MapScalarApiReference(new ScalarOptionSetup().Setup);
         }
+
+        // Custom middleware.
+        app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();
 

@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SomeSandwich.Donut.Domain\SomeSandwich.Donut.Domain.csproj" />
     <ProjectReference Include="..\SomeSandwich.Donut.Application.Common\SomeSandwich.Donut.Application.Common.csproj" />
   </ItemGroup>
 
