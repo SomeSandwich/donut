@@ -6,7 +6,7 @@ services:
     image: postgres:latest
 
   nosqldata:
-    image: mongodb/mongodb-community-server:latest
+    image: mongo:latest
 
   zipkin:
     image: openzipkin/zipkin-slim:latest

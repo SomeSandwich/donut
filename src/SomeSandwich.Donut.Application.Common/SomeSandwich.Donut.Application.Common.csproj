@@ -15,4 +15,8 @@
     <PackageReference Include="Scalar.AspNetCore" Version="1.2.51" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
+
 </Project>
