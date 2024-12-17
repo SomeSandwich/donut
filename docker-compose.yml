@@ -19,8 +19,8 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:8.17.0
 
-  zipkin:
-    image: openzipkin/zipkin-slim:latest
+  jaeger:
+    image: jaegertracing/jaeger:latest
 
   dapr-dashboard:
     image: daprio/dashboard:latest

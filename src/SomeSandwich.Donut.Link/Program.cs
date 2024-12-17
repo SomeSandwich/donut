@@ -25,6 +25,9 @@ public class Program
         var services = builder.Services;
         var daprClient = new DaprClientBuilder().Build();
 
+        // Dapr.
+        services.AddDaprClient();
+
         // OpenAPI.
         services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
 
