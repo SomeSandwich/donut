@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using Dapr.Client;
 using MongoDB.Driver;
+using MongoDB.Driver.Core.Extensions.DiagnosticSources;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
@@ -37,10 +40,25 @@ public class Program
         // Database.
         var dbConnectionString =
             (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:LinkDB"))["ConnectionStrings:LinkDB"];
-        services.AddSingleton<IMongoClient>(_ => new MongoClient(dbConnectionString));
+        var clientSettings = MongoClientSettings.FromConnectionString(dbConnectionString);
+        clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
+        services.AddSingleton<IMongoClient>(_ => new MongoClient(clientSettings));
 
         // Logging.
         services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
+
+        // Open Telemetry.
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService("Link.Api"))
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources"); // For MongoDB.
+
+                tracing.AddOtlpExporter();
+            });
 
         var app = builder.Build();
 

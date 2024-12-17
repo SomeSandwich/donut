@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Dapr.Client;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
@@ -35,6 +37,18 @@ public static class Program
 
         // Logging.
         services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
+
+        // Open Telemetry.
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService("Identity.Api"))
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
+
+                tracing.AddOtlpExporter();
+            });
 
         var app = builder.Build();
 
