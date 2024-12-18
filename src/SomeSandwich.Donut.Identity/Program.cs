@@ -7,6 +7,7 @@ using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Startup;
+using SomeSandwich.Donut.Identity.Infrastructure.DependencyInjection;
 
 namespace SomeSandwich.Donut.Identity;
 
@@ -53,6 +54,8 @@ public static class Program
                 tracing.AddOtlpExporter();
             });
 
+        SystemModule.Register(services);
+
         var app = builder.Build();
 
         // Scalar.
@@ -62,7 +65,8 @@ public static class Program
             app.MapScalarApiReference(new ScalarOptionSetup().Setup);
         }
 
-        // Custom middleware.
+        // Custom middlewares.
+        app.UseMiddleware<ApiExceptionMiddleware>();
         app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();

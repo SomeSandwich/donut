@@ -29,7 +29,7 @@ public class CreateLinkEndpoint : IEndpoint
             if (isExist > 0)
             {
                 logger.LogInformation("Href {Href} already exists.", command.Url);
-                throw new DomainException($"Link {command.Url} already exists in the system.");
+                throw new DomainException($"Link \"{command.Url}\" already exists in the system.");
             }
 
             var link = new Domain.Link.Link { Href = command.Url };

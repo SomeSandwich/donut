@@ -20,8 +20,4 @@
     <ProjectReference Include="..\SomeSandwich.Donut.Application.Common\SomeSandwich.Donut.Application.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\Startup\" />
-  </ItemGroup>
-
 </Project>
