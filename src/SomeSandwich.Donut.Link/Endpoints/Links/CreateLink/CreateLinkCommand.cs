@@ -1,6 +1,7 @@
-﻿using SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+﻿using SomeSandwich.Donut.Abstractions.OpenApi;
+using SomeSandwich.Donut.Abstractions.OpenApi.Attributes;
 
-namespace SomeSandwich.Donut.Link.Endpoints.Links;
+namespace SomeSandwich.Donut.Link.Endpoints.Links.CreateLink;
 
 /// <summary>
 /// Represents a command to create a link.
