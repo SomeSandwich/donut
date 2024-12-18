@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Any;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Abstractions.OpenApi;
 
 /// <summary>
 /// Defines metadata to generate an OpenAPI example.

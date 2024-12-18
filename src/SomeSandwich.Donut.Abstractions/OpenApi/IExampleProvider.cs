@@ -1,4 +1,4 @@
-﻿namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+﻿namespace SomeSandwich.Donut.Abstractions.OpenApi;
 
 /// <summary>
 /// Defines a method for obtaining examples for OpenAPI documentation.

@@ -1,4 +1,4 @@
-﻿namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+﻿namespace SomeSandwich.Donut.Abstractions.OpenApi.Atributes;
 
 /// <summary>
 /// An attribute representing an example for an OpenAPI ID operation parameter.

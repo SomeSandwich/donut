@@ -6,13 +6,13 @@ using System.Xml.XPath;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi.Descriptions;
 
 /// <summary>
 /// An OpenAPI schema transformer that adds descriptions from XML documentation.
 /// </summary>
 /// <remarks>
-/// https://github.com/martincostello/aspnetcore-openapi/blob/main/src/TodoApp/OpenApi/AspNetCore/AddSchemaDescriptionsTransformer.cs
+/// https://github.com/martincostello/aspnetcore-openapi/blob/main/src/TodoApp/OpenApi/AspNetCore/AddSchemaDescriptionsTransformer.cs.
 /// </remarks>
 public class AddSchemaDescriptionsTransformer : IOpenApiSchemaTransformer
 {

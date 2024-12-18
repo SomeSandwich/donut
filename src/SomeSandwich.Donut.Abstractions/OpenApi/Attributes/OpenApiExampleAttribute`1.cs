@@ -1,4 +1,6 @@
-﻿namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+﻿using SomeSandwich.Donut.Abstractions.OpenApi.Atributes;
+
+namespace SomeSandwich.Donut.Abstractions.OpenApi.Attributes;
 
 /// <summary>
 /// An attribute representing an example for an OpenAPI operation or schema.

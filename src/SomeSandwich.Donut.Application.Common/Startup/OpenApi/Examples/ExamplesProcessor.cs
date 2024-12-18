@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.OpenApi.Models;
+using SomeSandwich.Donut.Abstractions.OpenApi;
+using SomeSandwich.Donut.Abstractions.OpenApi.Extensions;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi.Examples;
 
 /// <summary>
 /// A class representing a processor that can add examples to OpenAPI operations and schemas.
@@ -14,6 +16,11 @@ public abstract class ExamplesProcessor
 {
     private static readonly OpenApiJsonSerializerContext Context = OpenApiJsonSerializerContext.Default;
 
+    /// <summary>
+    /// Processes the OpenAPI operation to add examples to parameters, request bodies, and responses.
+    /// </summary>
+    /// <param name="operation">The OpenAPI operation to process.</param>
+    /// <param name="description">The API description of the operation.</param>
     protected void Process(OpenApiOperation operation, ApiDescription description)
     {
         // Get all the examples that may apply to the operation through attributes
@@ -35,6 +42,11 @@ public abstract class ExamplesProcessor
         TryAddResponseExamples(operation.Responses, description, examples);
     }
 
+    /// <summary>
+    /// Processes the OpenAPI schema to add examples.
+    /// </summary>
+    /// <param name="schema">The OpenAPI schema to process.</param>
+    /// <param name="type">The type associated with the schema.</param>
     protected void Process(OpenApiSchema schema, Type type)
     {
         if (schema.Example is not null)

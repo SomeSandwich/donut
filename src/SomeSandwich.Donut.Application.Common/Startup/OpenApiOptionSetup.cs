@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
+using SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+using SomeSandwich.Donut.Application.Common.Startup.OpenApi.Descriptions;
+using SomeSandwich.Donut.Application.Common.Startup.OpenApi.Examples;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup;
 
 /// <summary>
 /// Provides methods to configure OpenAPI options.

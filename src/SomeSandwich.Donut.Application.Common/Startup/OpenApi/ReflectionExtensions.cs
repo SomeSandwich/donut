@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using SomeSandwich.Donut.Abstractions.OpenApi;
 
 namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
 

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SomeSandwich.Donut.Abstractions.OpenApi;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi.Examples;
 
 /// <summary>
 /// A class representing an example provider for <see cref="ProblemDetails"/>.

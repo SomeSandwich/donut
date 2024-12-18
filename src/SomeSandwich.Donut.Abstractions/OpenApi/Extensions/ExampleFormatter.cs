@@ -3,19 +3,21 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Any;
+using SomeSandwich.Donut.Application.Common.JsonConverters;
 
-namespace SomeSandwich.Donut.Application.Common.Startup.OpenApi;
+namespace SomeSandwich.Donut.Abstractions.OpenApi.Extensions;
 
 /// <summary>
 /// A class containing methods to help format JSON examples for OpenAPI.
 /// </summary>
-internal static class ExampleFormatter
+public static class ExampleFormatter
 {
     private static JsonSerializerOptions jsonSerializerOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = true
+        WriteIndented = true,
+        Converters = { new BsonDocumentJsonConverter() }
     };
 
     /// <summary>

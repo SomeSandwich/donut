@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using SomeSandwich.Donut.Application.Common.JsonConverters;
 
 namespace SomeSandwich.Donut.Application.Common;
 
@@ -13,5 +14,6 @@ namespace SomeSandwich.Donut.Application.Common;
 [JsonSourceGenerationOptions(
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
-    WriteIndented = true)]
+    WriteIndented = true,
+    Converters = [typeof(BsonDocumentJsonConverter)])]
 public sealed partial class OpenApiJsonSerializerContext : JsonSerializerContext;
