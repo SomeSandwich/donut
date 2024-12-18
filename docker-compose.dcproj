@@ -5,6 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>a09aac77-230a-4746-8835-cbf0ddcf4ffe</ProjectGuid>
+    <DockerComposeProjectName>somesandwich-donut</DockerComposeProjectName>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
