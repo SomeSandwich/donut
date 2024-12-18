@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using SomeSandwich.Donut.Abstractions.OpenApi.Extensions;
 
-namespace SomeSandwich.Donut.Abstractions.OpenApi.Atributes;
+namespace SomeSandwich.Donut.Abstractions.OpenApi.Attributes;
 
 /// <summary>
 /// An attribute representing an example for an OpenAPI operation or schema.

@@ -2,8 +2,8 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders.Testing;
 using Saritasa.Tools.Common.Utils;
 using Saritasa.Tools.Domain.Exceptions;
-using SomeSandwich.Donut.Application.Common.Middlewares;
+
+namespace SomeSandwich.Donut.Application.Common.Middlewares;
 
 /// <summary>
 /// Exception handling middleware. In general:

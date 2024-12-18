@@ -8,6 +8,7 @@ using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
+using SomeSandwich.Donut.Application.Common.Middlewares;
 using SomeSandwich.Donut.Application.Common.Startup;
 using SomeSandwich.Donut.Link.Infrastructure.DependencyInjection;
 
