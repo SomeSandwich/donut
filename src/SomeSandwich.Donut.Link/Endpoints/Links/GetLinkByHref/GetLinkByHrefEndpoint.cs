@@ -22,20 +22,22 @@ public class GetLinkByHrefEndpoint : IEndpoint
             [AsParameters] GetLinkByHrefQuery query,
             CancellationToken cancellationToken) =>
         {
+            var href = query.Href.RemoveWww();
+
             var linkCollection = db.GetMongoCollection<Domain.Link.Link>("links");
-            var link = await cache.GetOrSetAsync<Domain.Link.Link>($"link:{query.Href}", async _ =>
+            var link = await cache.GetOrSetAsync<Domain.Link.Link>($"link:{href}", async _ =>
             {
-                return await (await linkCollection.FindAsync(x => x.Href == query.Href,
-                    cancellationToken: cancellationToken)).FirstOrDefaultAsync(cancellationToken);
+                return await (await linkCollection.FindAsync(l => l.Href == href, cancellationToken: cancellationToken))
+                    .FirstOrDefaultAsync(cancellationToken);
             }, token: cancellationToken);
 
             if (link is null)
             {
-                logger.LogInformation("Not found link {Href}", query.Href);
-                throw new NotFoundException($"Not found link {query.Href} in system.");
+                logger.LogInformation("Not found link {Href}", href);
+                throw new NotFoundException($"Not found link \"{href}\" in system.");
             }
 
-            logger.LogDebug("Found link {Href} in system.", query.Href);
+            logger.LogDebug("Found link {Href} in system.", href);
 
             return link;
         })

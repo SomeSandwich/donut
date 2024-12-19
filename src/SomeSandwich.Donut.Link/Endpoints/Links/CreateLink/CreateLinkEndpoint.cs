@@ -27,26 +27,30 @@ public class CreateLinkEndpoint : IEndpoint
             [FromBody] CreateLinkCommand command,
             CancellationToken cancellationToken) =>
         {
+            var href = command.Href.RemoveWww();
+
             var linkCollection = db.GetMongoCollection<Domain.Link.Link>("links");
-
-            var isExist = await (await linkCollection.FindAsync(l => l.Href == command.Href, null, cancellationToken))
-                .FirstOrDefaultAsync(cancellationToken);
-
-            if (isExist is not null)
+            var isExits = await cache.GetOrSetAsync<Domain.Link.Link>($"link:{href}", async _ =>
             {
-                logger.LogInformation("Href {Href} already exists.", command.Href);
+                return await (await linkCollection.FindAsync(l => l.Href == href, cancellationToken: cancellationToken))
+                    .FirstOrDefaultAsync(cancellationToken);
+            }, token: cancellationToken);
+
+            if (isExits is not null)
+            {
+                logger.LogInformation("Href {Href} already exists.", href);
                 throw new DomainException($"Link \"{command.Href}\" already exists in the system.");
             }
 
             var id = ObjectId.GenerateNewId();
-            var link = new Domain.Link.Link { Id = id, Href = command.Href };
+            var link = new Domain.Link.Link { Id = id, Href = href };
             await linkCollection.InsertOneAsync(link, null, cancellationToken);
 
-            await queue.Publish(new GenerateLinkMetadataCommand { Id = id, Href = command.Href }, cancellationToken);
+            await queue.Publish(new GenerateLinkMetadataCommand { Id = id, Href = href }, cancellationToken);
 
             await cache.SetAsync($"link:{link.Href}", link, token: cancellationToken);
 
-            logger.LogInformation("Create new link with {Href}", command.Href);
+            logger.LogInformation("Create new link with {Href}", href);
 
             return link;
         })

@@ -36,7 +36,7 @@ public class Link : IExampleProvider<Link>
         return new Link
         {
             Id = ObjectId.Empty,
-            Href = "https://example.com",
+            Href = "https://www.example.com",
             Metadata = new BsonDocument
             {
                 { "Host", "example.com" },
