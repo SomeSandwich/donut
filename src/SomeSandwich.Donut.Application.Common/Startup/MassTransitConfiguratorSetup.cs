@@ -39,13 +39,7 @@ public class MassTransitConfiguratorSetup
 
                 cfg.ConfigureEndpoints(context);
 
-                cfg.ConfigureJsonSerializerOptions(options =>
-                {
-                    options.Converters.Add(new BsonDocumentJsonConverter());
-                    options.Converters.Add(new ObjectIdJsonConverter());
-
-                    return options;
-                });
+                cfg.ConfigureJsonSerializerOptions(new JsonSerializerOptionSetup().Setup);
             });
         });
     }

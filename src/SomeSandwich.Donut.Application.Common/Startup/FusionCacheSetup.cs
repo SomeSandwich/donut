@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using SomeSandwich.Donut.Abstractions.JsonConverters;
@@ -26,10 +27,7 @@ public static class FusionCacheSetup
                 .SetPriority(CacheItemPriority.High)
                 .SetFailSafe(true, TimeSpan.FromHours(2))
                 .SetFactoryTimeouts(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(2)))
-            .WithSerializer(new FusionCacheSystemTextJsonSerializer(new JsonSerializerOptions()
-            {
-                Converters = { new BsonDocumentJsonConverter(), new ObjectIdJsonConverter() }
-            }))
+            .WithSerializer(new FusionCacheSystemTextJsonSerializer(JsonSerializerOptionSetup.Get()))
             .WithDistributedCache(new RedisCache(new RedisCacheOptions { Configuration = connectionString }));
     }
 }
