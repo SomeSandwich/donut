@@ -21,6 +21,10 @@ services:
     volumes:
       - "donut-nosqldata:/data/db"
 
+  cachedata:
+    ports:
+      - "5303:6379"
+
   fluentd:
     volumes:
       - "./docker/fluentd/conf:/fluentd/etc"
@@ -132,6 +136,8 @@ volumes:
   donut-sqldata:
     external: false
   donut-nosqldata:
+    external: false
+  donut-cachedata:
     external: false
   donut-efkdata:
     external: false

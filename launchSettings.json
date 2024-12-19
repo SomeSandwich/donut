@@ -4,10 +4,19 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
+        "sqldata": "StartWithoutDebugging",
+        "nosqldata": "StartWithoutDebugging",
+        "cachedata": "StartWithoutDebugging",
+        "fluentd": "StartWithoutDebugging",
+        "elasticsearch": "StartWithoutDebugging",
+        "kibana": "StartWithoutDebugging",
+        "jaeger": "StartWithoutDebugging",
+        "dapr-dashboard": "StartWithoutDebugging",
+        "keycloak": "StartWithoutDebugging",
         "identity-api": "StartDebugging",
         "identity-api-dapr": "StartWithoutDebugging",
-        "dapr-dashboard": "StartWithoutDebugging",
-        "zipkin": "StartWithoutDebugging"
+        "link-api": "StartDebugging",
+        "link-api-dapr": "StartWithoutDebugging"
       }
     }
   }

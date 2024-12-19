@@ -8,6 +8,9 @@ services:
   nosqldata:
     image: mongo:latest
 
+  cachedata:
+    image: redis:latest
+
   fluentd:
     build:
       context: .

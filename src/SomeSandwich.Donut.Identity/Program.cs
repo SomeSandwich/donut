@@ -45,12 +45,13 @@ public static class Program
 
         // Open Telemetry.
         services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService("Identity.Api"))
+            .ConfigureResource(resource => resource.AddService("identity-api"))
             .WithTracing(tracing =>
             {
                 tracing
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddFusionCacheInstrumentation();
 
                 tracing.AddOtlpExporter();
             });

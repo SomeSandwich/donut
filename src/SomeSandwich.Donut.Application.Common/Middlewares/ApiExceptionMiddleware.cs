@@ -78,8 +78,7 @@ public sealed class ApiExceptionMiddleware
         {
             if (httpContext.Response.HasStarted)
             {
-                logger.LogWarning(
-                    "The response has already started, the API exception middleware will not be executed.");
+                logger.LogWarning("The response has already started, the API exception middleware will not be executed.");
                 throw;
             }
             var problemDetails = GetObjectByException(exception, httpContext.RequestServices);
