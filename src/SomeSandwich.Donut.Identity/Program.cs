@@ -44,17 +44,7 @@ public static class Program
         services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
 
         // Open Telemetry.
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService("identity-api"))
-            .WithTracing(tracing =>
-            {
-                tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddFusionCacheInstrumentation();
-
-                tracing.AddOtlpExporter();
-            });
+        services.AddOpenTelemetry().Setup("identity-api");
 
         SystemModule.Register(services);
 

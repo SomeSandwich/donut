@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using SomeSandwich.Donut.Abstractions.OpenApi;
 using SomeSandwich.Donut.Abstractions.OpenApi.Attributes;
 
@@ -14,7 +13,6 @@ public class Link : IExampleProvider<Link>
     /// <summary>
     /// Gets or sets the unique identifier for the link.
     /// </summary>
-    [BsonId]
     public ObjectId Id { get; set; }
 
     /// <summary>
@@ -41,7 +39,13 @@ public class Link : IExampleProvider<Link>
             Href = "https://example.com",
             Metadata = new BsonDocument
             {
-                { "IsSystemSave", true }
+                { "Host", "example.com" },
+                { "Uri", new BsonDocument
+                    {
+                        { "AbsolutePath","/" },
+                        { "Query", "" }
+                    }
+                }
             }
         };
     }

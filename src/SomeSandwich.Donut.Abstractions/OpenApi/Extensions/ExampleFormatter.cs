@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Any;
-using SomeSandwich.Donut.Application.Common.JsonConverters;
+using SomeSandwich.Donut.Abstractions.JsonConverters;
 
 namespace SomeSandwich.Donut.Abstractions.OpenApi.Extensions;
 
@@ -17,7 +17,7 @@ public static class ExampleFormatter
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         WriteIndented = true,
-        Converters = { new BsonDocumentJsonConverter() }
+        Converters = { new BsonDocumentJsonConverter(), new ObjectIdJsonConverter() }
     };
 
     /// <summary>

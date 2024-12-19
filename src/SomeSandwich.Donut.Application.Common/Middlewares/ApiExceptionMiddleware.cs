@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +47,8 @@ public sealed class ApiExceptionMiddleware
         [typeof(ForbiddenException)] = StatusCodes.Status403Forbidden,
         [typeof(UnauthorizedException)] = StatusCodes.Status401Unauthorized,
         [typeof(DomainException)] = StatusCodes.Status400BadRequest,
-        [typeof(InvalidOrderFieldException)] = StatusCodes.Status400BadRequest
+        [typeof(InvalidOrderFieldException)] = StatusCodes.Status400BadRequest,
+        [typeof(BadHttpRequestException)] = StatusCodes.Status400BadRequest
     };
 
     /// <summary>
@@ -101,6 +103,11 @@ public sealed class ApiExceptionMiddleware
         problem.Extensions[ErrorsKey] = Enumerable.Empty<ProblemFieldDto>();
         switch (exception)
         {
+            case BadHttpRequestException badHttpRequestException:
+                AddExceptionInfoToProblemDetails(problem, new DomainException(badHttpRequestException.Message));
+                statusCode = GetStatusCodeByExceptionType(badHttpRequestException.GetType());
+                break;
+
             case ValidationException validationException:
                 var jsonOptions = requestServices.GetRequiredService<IOptions<JsonOptions>>();
                 problem.Extensions[ErrorsKey] = validationException.Errors

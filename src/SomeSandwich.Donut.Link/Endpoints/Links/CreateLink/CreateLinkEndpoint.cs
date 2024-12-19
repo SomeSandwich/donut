@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Saritasa.Tools.Domain.Exceptions;
 using SomeSandwich.Donut.Application.Common.Constants;
 using SomeSandwich.Donut.Application.Common.Interfaces;
 using SomeSandwich.Donut.Application.Common.Utils;
+using SomeSandwich.Donut.Link.Endpoints.Links.GenerateLinkMetadata;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace SomeSandwich.Donut.Link.Endpoints.Links.CreateLink;
 
@@ -17,27 +21,34 @@ public class CreateLinkEndpoint : IEndpoint
     {
         app.MapPost("api/link", async (
             ILogger<CreateLinkCommand> logger,
-            IMongoClient dbClient,
+            IMongoClient db,
+            IFusionCache cache,
+            IBus queue,
             [FromBody] CreateLinkCommand command,
             CancellationToken cancellationToken) =>
         {
-            var linkCollection = dbClient.GetMongoCollection<Domain.Link.Link>("links");
+            var linkCollection = db.GetMongoCollection<Domain.Link.Link>("links");
 
-            var isExist =
-                await linkCollection.CountDocumentsAsync(l => l.Href == command.Url, null, cancellationToken);
+            var isExist = await (await linkCollection.FindAsync(l => l.Href == command.Href, null, cancellationToken))
+                .FirstOrDefaultAsync(cancellationToken);
 
-            if (isExist > 0)
+            if (isExist is not null)
             {
-                logger.LogInformation("Href {Href} already exists.", command.Url);
-                throw new DomainException($"Link \"{command.Url}\" already exists in the system.");
+                logger.LogInformation("Href {Href} already exists.", command.Href);
+                throw new DomainException($"Link \"{command.Href}\" already exists in the system.");
             }
 
-            var link = new Domain.Link.Link { Href = command.Url };
+            var id = ObjectId.GenerateNewId();
+            var link = new Domain.Link.Link { Id = id, Href = command.Href };
             await linkCollection.InsertOneAsync(link, null, cancellationToken);
 
-            logger.LogInformation("Create new link with {Href}", command.Url);
+            await queue.Publish(new GenerateLinkMetadataCommand { Id = id, Href = command.Href }, cancellationToken);
 
-            return isExist;
+            await cache.SetAsync($"link:{link.Href}", link, token: cancellationToken);
+
+            logger.LogInformation("Create new link with {Href}", command.Href);
+
+            return link;
         })
         .AddEndpointMetadata<Domain.Link.Link>(EndpointTagConstants.LinksTag, "Create new link.");
     }

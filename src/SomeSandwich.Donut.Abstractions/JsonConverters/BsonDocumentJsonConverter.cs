@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 
-namespace SomeSandwich.Donut.Application.Common.JsonConverters;
+namespace SomeSandwich.Donut.Abstractions.JsonConverters;
 
 /// <summary>
 /// Converts a BsonDocument to and from JSON.

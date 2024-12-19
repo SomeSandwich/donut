@@ -1,23 +1,14 @@
 ﻿using System.Reflection;
-using System.Text.Json;
 using Dapr.Client;
+using MassTransit;
 using Microsoft.AspNetCore.Http.Json;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
-using MongoDB.Driver.Core.Extensions.DiagnosticSources;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
-using SomeSandwich.Donut.Application.Common.JsonConverters;
 using SomeSandwich.Donut.Application.Common.Middlewares;
 using SomeSandwich.Donut.Application.Common.Startup;
+using SomeSandwich.Donut.Link.Endpoints.Links.GenerateLinkMetadata;
 using SomeSandwich.Donut.Link.Infrastructure.DependencyInjection;
-using ZiggyCreatures.Caching.Fusion;
-using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 
 namespace SomeSandwich.Donut.Link;
 
@@ -50,43 +41,21 @@ public class Program
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         // Database.
-        var dbConnectionString =
-            (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:LinkDB"))["ConnectionStrings:LinkDB"];
-        var clientSettings = MongoClientSettings.FromConnectionString(dbConnectionString);
-        clientSettings.ClusterConfigurator = cb => cb.Subscribe(new DiagnosticsActivityEventSubscriber());
-        services.AddSingleton<IMongoClient>(_ => new MongoClient(clientSettings));
+        var connectionString = await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings");
+        services.AddMongoDB(connectionString["LinkDB"]);
 
         // Cache.
-        var cacheConnectionString =
-            (await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings:Cache"))["ConnectionStrings:Cache"];
-        services.AddFusionCache()
-            .WithDefaultEntryOptions(new FusionCacheEntryOptions()
-                .SetDuration(TimeSpan.FromMinutes(2))
-                .SetPriority(CacheItemPriority.High)
-                .SetFailSafe(true, TimeSpan.FromHours(2))
-                .SetFactoryTimeouts(TimeSpan.FromMilliseconds(100), TimeSpan.FromSeconds(2)))
-            .WithSerializer(new FusionCacheSystemTextJsonSerializer(new JsonSerializerOptions()
-            {
-                Converters = { new BsonDocumentJsonConverter() }
-            }))
-            .WithDistributedCache(new RedisCache(new RedisCacheOptions { Configuration = cacheConnectionString }));
+        var cacheConnectionString = connectionString["Cache"];
+        services.AddFusionCache().Setup(cacheConnectionString);
 
+        // Message Queue.
+        var messageQueueHost = await daprClient.GetSecretAsync("donut-secrets", "MessageQueue");
+        services.AddMassTransit(new MassTransitConfiguratorSetup(messageQueueHost).Setup);
         // Logging.
         services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
 
         // Open Telemetry.
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource.AddService("link-api"))
-            .WithTracing(tracing =>
-            {
-                tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources") // For MongoDB.
-                    .AddFusionCacheInstrumentation();
-
-                tracing.AddOtlpExporter();
-            });
+        services.AddOpenTelemetry().Setup("link-api", hasMongoDB: true, hasRedis: true, hasMassTransit: true);
 
         SystemModule.Register(services);
 

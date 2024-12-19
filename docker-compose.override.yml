@@ -25,6 +25,11 @@ services:
     ports:
       - "5303:6379"
 
+  messagequeue:
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   fluentd:
     volumes:
       - "./docker/fluentd/conf:/fluentd/etc"

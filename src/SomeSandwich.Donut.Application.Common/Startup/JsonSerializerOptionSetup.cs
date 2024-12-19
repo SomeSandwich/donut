@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.Json;
-using SomeSandwich.Donut.Application.Common.JsonConverters;
+using SomeSandwich.Donut.Abstractions.JsonConverters;
 
 namespace SomeSandwich.Donut.Application.Common.Startup;
 
@@ -15,5 +15,6 @@ public class JsonSerializerOptionSetup
     public void Setup(JsonOptions options)
     {
         options.SerializerOptions.Converters.Add(new BsonDocumentJsonConverter());
+        options.SerializerOptions.Converters.Add(new ObjectIdJsonConverter());
     }
 }
