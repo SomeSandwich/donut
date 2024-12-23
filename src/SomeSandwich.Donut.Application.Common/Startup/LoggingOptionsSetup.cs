@@ -1,9 +1,7 @@
-﻿using Elastic.CommonSchema.Serilog;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.AspNetCore;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 
 namespace SomeSandwich.Donut.Application.Common.Startup;
 
@@ -34,7 +32,7 @@ public class LoggingOptionsSetup
             .ReadFrom.Configuration(configuration)
             .ReadFrom.Services(serviceProvider)
             .Enrich.FromLogContext()
-            .WriteTo.Console(new EcsTextFormatter());
+            .WriteTo.Console();
     }
 
     /// <summary>

@@ -30,28 +30,6 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  fluentd:
-    volumes:
-      - "./docker/fluentd/conf:/fluentd/etc"
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-
-  elasticsearch:
-    environment:
-      - "discovery.type=single-node"
-      - "xpack.security.enabled=false"
-    expose:
-      - "9200"
-    ports:
-      - "9200:9200"
-    volumes:
-      - "donut-efkdata:/usr/share/elasticsearch/data:Z"
-
-  kibana:
-    ports:
-      - "5601:5601"
-
   jaeger:
     ports:
       - "4317:4317"
@@ -92,12 +70,6 @@ services:
     ports:
       - "5101:80"
       - "50001:50001"
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        fluentd-async: "true"
-        tag: identity-api
 
   identity-api-dapr:
     command: ["./daprd",
@@ -119,12 +91,6 @@ services:
     ports:
       - "5102:80"
       - "50002:50001"
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        fluentd-async: "true"
-        tag: link-api
 
   link-api-dapr:
     command: ["./daprd",
@@ -143,6 +109,4 @@ volumes:
   donut-nosqldata:
     external: false
   donut-cachedata:
-    external: false
-  donut-efkdata:
     external: false

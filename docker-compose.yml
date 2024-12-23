@@ -14,17 +14,6 @@ services:
   messagequeue:
     image: rabbitmq:4-management-alpine
 
-  fluentd:
-    build:
-      context: .
-      dockerfile: docker/fluentd/Dockerfile
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.0
-
   jaeger:
     image: jaegertracing/jaeger:latest
 
