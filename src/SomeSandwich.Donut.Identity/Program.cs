@@ -59,7 +59,7 @@ public static class Program
 
         // Custom middlewares.
         app.UseMiddleware<ApiExceptionMiddleware>();
-        app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
+        //app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();
 

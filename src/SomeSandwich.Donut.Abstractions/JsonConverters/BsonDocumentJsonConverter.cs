@@ -12,7 +12,8 @@ public class BsonDocumentJsonConverter : JsonConverter<BsonDocument>
     /// <inheritdoc />
     public override BsonDocument? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        using var doc = JsonDocument.ParseValue(ref reader);
+        return BsonDocument.Parse(doc.RootElement.GetRawText());
     }
 
     /// <inheritdoc />

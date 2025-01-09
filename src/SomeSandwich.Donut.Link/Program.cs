@@ -7,7 +7,6 @@ using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Middlewares;
 using SomeSandwich.Donut.Application.Common.Startup;
-using SomeSandwich.Donut.Link.Endpoints.Links.GenerateLinkMetadata;
 using SomeSandwich.Donut.Link.Infrastructure.DependencyInjection;
 
 namespace SomeSandwich.Donut.Link;
@@ -70,7 +69,7 @@ public class Program
 
         // Custom middlewares.
         app.UseMiddleware<ApiExceptionMiddleware>();
-        app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
+        //app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();
 

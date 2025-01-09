@@ -45,6 +45,9 @@ public static class OpenTelemetrySetup
                  }
 
                  tracing.AddOtlpExporter();
+             })
+             .WithMetrics(metric =>
+             {
              });
     }
 }

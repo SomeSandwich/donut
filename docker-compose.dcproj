@@ -6,9 +6,11 @@
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>a09aac77-230a-4746-8835-cbf0ddcf4ffe</ProjectGuid>
     <DockerComposeProjectName>somesandwich-donut</DockerComposeProjectName>
+    <AdditionalComposeFilePaths>docker-compose.o11y.yml</AdditionalComposeFilePaths>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
+    <None Include="docker-compose.o11y.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
