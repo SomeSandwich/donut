@@ -18,19 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9D47D470-34A
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A09AAC77-230A-4746-8835-CBF0DDCF4FFE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr", "dapr", "{D0F84BEA-27FD-4D6C-9911-0D6887195F91}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{6050A0F0-4B2D-4D1C-BEBD-DAF1F404A4BE}"
-	ProjectSection(SolutionItems) = preProject
-		dapr\components\donut-secrets.yaml = dapr\components\donut-secrets.yaml
-		dapr\components\secrets.json = dapr\components\secrets.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuation", "configuation", "{46EC1BEE-204F-4BF0-A733-FCC02040033C}"
-	ProjectSection(SolutionItems) = preProject
-		dapr\configuration\donut-config.yaml = dapr\configuration\donut-config.yaml
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeSandwich.Donut.Link", "src\SomeSandwich.Donut.Link\SomeSandwich.Donut.Link.csproj", "{67AD357A-391D-4228-AB9D-438279769863}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{CC469977-6985-45DB-B69A-433AF24005EC}"
@@ -80,8 +67,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0A15F4D0-825F-4A19-BEEA-A62D0DD01010} = {9D47D470-34A1-4F9D-B086-14403B5B249B}
 		{B4FEEC5A-043F-4370-8809-A1E913F795D8} = {0A15F4D0-825F-4A19-BEEA-A62D0DD01010}
-		{6050A0F0-4B2D-4D1C-BEBD-DAF1F404A4BE} = {D0F84BEA-27FD-4D6C-9911-0D6887195F91}
-		{46EC1BEE-204F-4BF0-A733-FCC02040033C} = {D0F84BEA-27FD-4D6C-9911-0D6887195F91}
 		{67AD357A-391D-4228-AB9D-438279769863} = {0A15F4D0-825F-4A19-BEEA-A62D0DD01010}
 		{CC469977-6985-45DB-B69A-433AF24005EC} = {9D47D470-34A1-4F9D-B086-14403B5B249B}
 		{565BDC2E-1E3F-4144-A53B-46E0FC35FECE} = {CC469977-6985-45DB-B69A-433AF24005EC}

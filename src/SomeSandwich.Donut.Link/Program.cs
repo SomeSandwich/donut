@@ -1,13 +1,15 @@
 ﻿using System.Reflection;
-using Dapr.Client;
 using MassTransit;
 using Microsoft.AspNetCore.Http.Json;
+using Newtonsoft.Json;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
 using SomeSandwich.Donut.Application.Common.Middlewares;
 using SomeSandwich.Donut.Application.Common.Startup;
 using SomeSandwich.Donut.Link.Infrastructure.DependencyInjection;
+using Vault;
+using Vault.Client;
 
 namespace SomeSandwich.Donut.Link;
 
@@ -25,13 +27,16 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
         var services = builder.Services;
-        var daprClient = new DaprClientBuilder().Build();
+
+        // Vault.
+        var address = "http://vault:8200";
+        var config = new VaultConfiguration(address);
+        var client = new VaultClient(config);
+        client.SetToken("root-token");
+        services.AddSingleton<VaultClient>(_ => client);
 
         // Json Serialize and Deserialize settings.
         services.Configure<JsonOptions>(new JsonSerializerOptionSetup().Setup);
-
-        // Dapr.
-        services.AddDaprClient();
 
         // OpenAPI.
         services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
@@ -40,16 +45,18 @@ public class Program
         services.AddEndpoints(Assembly.GetExecutingAssembly());
 
         // Database.
-        var connectionString = await daprClient.GetSecretAsync("donut-secrets", "ConnectionStrings");
-        services.AddMongoDB(connectionString["LinkDB"]);
+        var connectionString = JsonConvert.DeserializeObject<ConnectionStrings>(
+            (await client.Secrets.KvV2ReadAsync("ConnectionStrings", "secret")).Data.Data.ToString() ?? throw new InvalidOperationException());
+        services.AddMongoDB(connectionString.LinkDB);
 
         // Cache.
-        var cacheConnectionString = connectionString["Cache"];
-        services.AddFusionCache().Setup(cacheConnectionString);
+        services.AddFusionCache().Setup(connectionString.Cache);
 
         // Message Queue.
-        var messageQueueHost = await daprClient.GetSecretAsync("donut-secrets", "MessageQueue");
-        services.AddMassTransit(new MassTransitConfiguratorSetup(messageQueueHost).Setup);
+        var rabbitMqOptions = JsonConvert.DeserializeObject<RabbitMqOptions>(
+            (await client.Secrets.KvV2ReadAsync("MessageQueue", "secret")).Data.Data.ToString() ?? throw new InvalidOperationException());
+        services.AddMassTransit(new MassTransitConfiguratorSetup(rabbitMqOptions).Setup);
+
         // Logging.
         services.AddSerilog(new LoggingOptionsSetup(configuration).Setup);
 
@@ -69,7 +76,7 @@ public class Program
 
         // Custom middlewares.
         app.UseMiddleware<ApiExceptionMiddleware>();
-        //app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
+        // app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();
 

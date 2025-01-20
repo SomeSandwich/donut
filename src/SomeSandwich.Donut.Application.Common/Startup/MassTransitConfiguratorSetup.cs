@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using MassTransit;
-using SomeSandwich.Donut.Abstractions.JsonConverters;
 
 namespace SomeSandwich.Donut.Application.Common.Startup;
 
@@ -9,15 +8,15 @@ namespace SomeSandwich.Donut.Application.Common.Startup;
 /// </summary>
 public class MassTransitConfiguratorSetup
 {
-    private readonly IDictionary<string, string> configuration;
+    private readonly RabbitMqOptions options;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MassTransitConfiguratorSetup"/> class.
+    /// Constructor.
     /// </summary>
-    /// <param name="configuration">The configuration settings for MassTransit.</param>
-    public MassTransitConfiguratorSetup(IDictionary<string, string> configuration)
+    /// <param name="options"></param>
+    public MassTransitConfiguratorSetup(RabbitMqOptions options)
     {
-        this.configuration = configuration;
+        this.options = options;
     }
 
     /// <summary>
@@ -29,13 +28,12 @@ public class MassTransitConfiguratorSetup
         configurator.SetKebabCaseEndpointNameFormatter();
         configurator.AddConsumers(Assembly.GetEntryAssembly());
 
-        var port = ushort.Parse(configuration["Port"]);
         configurator.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(configuration["Host"], port, configuration["VHost"], h =>
+            cfg.Host(options.Host, options.Port, options.VHost, h =>
             {
-                h.Username(configuration["Username"]);
-                h.Password(configuration["Password"]);
+                h.Username(options.Username);
+                h.Password(options.Password);
 
                 cfg.ConfigureEndpoints(context);
 

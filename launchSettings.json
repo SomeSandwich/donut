@@ -12,12 +12,11 @@
         "collector": "StartWithoutDebugging",
         "tempo": "StartWithoutDebugging",
         "grafana": "StartWithoutDebugging",
-        "dapr-dashboard": "StartWithoutDebugging",
+        "vault": "StartWithoutDebugging",
+        "vault-init": "StartWithoutDebugging",
         "keycloak": "StartWithoutDebugging",
         "identity-api": "StartDebugging",
-        "identity-api-dapr": "StartWithoutDebugging",
-        "link-api": "StartDebugging",
-        "link-api-dapr": "StartWithoutDebugging"
+        "link-api": "StartDebugging"
       }
     }
   }

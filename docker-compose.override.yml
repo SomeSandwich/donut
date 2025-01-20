@@ -28,18 +28,27 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  dapr-dashboard:
-    command: ["--docker-compose=true",
-      "--components-path=/components",
-      "--config-path=/configuration",
-      "--docker-compose-path=/docker-compose.yml"
-      ]
+  vault:
+    command: vault server -dev -dev-listen-address="0.0.0.0:8200"
     ports:
-      - "5402:8080"
+      - 8200:8200
+    environment:
+      - VAULT_ADDR=http://0.0.0.0:8200
+      - VAULT_API_ADDR=http://0.0.0.0:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=root-token
     volumes:
-      - "./dapr/components/:/components"
-      - "./dapr/configuration/:/configuration"
-      - "./docker-compose.yml/:/docker-compose.yml"
+      - ./docker/vault/config:/vault/config
+    privileged: true
+    cap_add:
+      - IPC_LOCK
+
+  vault-init:
+    volumes:
+      - ./docker/vault/vault-init.sh:/vault-init.sh
+    depends_on:
+      - vault
+    restart: "no"
+    entrypoint: sh -c "/vault-init.sh"
 
   keycloak:
     command: "start-dev --import-realm"
@@ -62,19 +71,6 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4317
     ports:
       - "5101:80"
-      - "50001:50001"
-
-  identity-api-dapr:
-    command: ["./daprd",
-      "-app-id", "identity-api",
-      "-app-port", "80",
-      "-placement-host-address", "dapr-placement:50000",
-      "-components-path", "/components",.
-      "-config", "/configuration/donut-config.yaml"
-      ]
-    volumes:
-      - "./dapr/components/:/components"
-      - "./dapr/configuration/:/configuration"
 
   link-api:
     environment:
@@ -83,19 +79,7 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4317
     ports:
       - "5102:80"
-      - "50002:50001"
 
-  link-api-dapr:
-    command: ["./daprd",
-      "-app-id", "link-api",
-      "-app-port", "80",
-      "-placement-host-address", "dapr-placement:50000",
-      "-components-path", "/components",
-      "-config", "/configuration/donut-config.yaml"
-      ]
-    volumes:
-      - "./dapr/components/:/components"
-      - "./dapr/configuration/:/configuration"
 volumes:
   donut-sqldata:
     external: false

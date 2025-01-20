@@ -12,8 +12,11 @@ services:
   messagequeue:
     image: rabbitmq:4-management-alpine
 
-  dapr-dashboard:
-    image: daprio/dashboard:latest
+  vault:
+    image: hashicorp/vault:latest
+
+  vault-init:
+    image: hashicorp/vault:latest
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -26,12 +29,6 @@ services:
     depends_on:
       - keycloak
 
-  identity-api-dapr:
-    image: "daprio/daprd:1.9.4"
-    network_mode: "service:identity-api"
-    depends_on:
-      - identity-api
-
   link-api:
     image: ${REGISTRY:-donut}/link.api:${TAG:-latest}
     build:
@@ -41,9 +38,3 @@ services:
       - nosqldata
       - cachedata
       - messagequeue
-
-  link-api-dapr:
-    image: "daprio/daprd:1.9.4"
-    network_mode: "service:link-api"
-    depends_on:
-      - link-api

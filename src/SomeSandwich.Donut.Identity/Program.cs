@@ -1,8 +1,5 @@
 ﻿using System.Reflection;
-using Dapr.Client;
 using Microsoft.AspNetCore.Http.Json;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Scalar.AspNetCore;
 using Serilog;
 using SomeSandwich.Donut.Application.Common.Extensions;
@@ -26,13 +23,9 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
         var services = builder.Services;
-        var daprClient = new DaprClientBuilder().Build();
 
         // Json Serialize and Deserialize settings.
         services.Configure<JsonOptions>(new JsonSerializerOptionSetup().Setup);
-
-        // Dapr.
-        services.AddDaprClient();
 
         // OpenAPI.
         services.AddOpenApi(new OpenApiOptionSetup(configuration).Setup);
@@ -59,7 +52,7 @@ public static class Program
 
         // Custom middlewares.
         app.UseMiddleware<ApiExceptionMiddleware>();
-        //app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
+        // app.UseSerilogRequestLogging(new LoggingOptionsSetup(configuration).SetupRequestLoggingOptions);
 
         app.MapEndpoints();
 
